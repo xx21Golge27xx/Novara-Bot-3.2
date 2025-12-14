@@ -1,0 +1,67 @@
+{
+  "token": "",
+  "log": "",
+  "sahip": "",
+  "giris-cikis": "",
+  "desteksunucusu": "",
+  "bot-davet": "",
+  "bot-adi": "",
+  "bot-id": "",
+  "website": "",
+  "durum": "",
+  "prefix": "",
+  "mesajXp": 1,
+  "sesXp": 2,
+  "levelXp": 99,
+
+  "kanallar": {
+    "baslangicMesaj": "1360654958319636580",
+    "hataLog": "1276899166701752320"
+  },
+
+  "presence": {
+    "default": {
+      "name": "/Yardım",
+      "type": "Custom",
+      "status": "online"
+    },
+
+    "interval": 15000,
+
+    "activities": [
+      {
+        "name": "Destek sistemi ile sunucuna destek sistemi kur!",
+        "type": "Playing"
+      },
+      {
+        "name": "Captcha sistemi ile sunucunu güvene al!",
+        "type": "Playing"
+      },
+      {
+        "name": "Botlist sistemi ile sunucunu kolaylaştır!",
+        "type": "Playing"
+      },
+      {
+        "name": "Moderasyon komutları ile sunucunu çok daha pratik yap!",
+        "type": "Playing"
+      },
+      {
+        "name": "SPONSOR hostingverim.com",
+        "type": "Playing"
+      },
+      {
+        "name": "Sorun varsa geri bildir yap",
+        "type": "Playing"
+      },
+      {
+        "name": "Twitch",
+        "type": "Streaming",
+        "url": "https://www.twitch.tv/blewys_"
+      },
+      {
+        "name": "/Yardım",
+        "type": "Custom"
+      }
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "name": "xx21_golge_27x",
+  "version": "2.5.0",
+  "description": "xx21_golge_27x",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Novara",
+  "license": "MIT",
+  "dependencies": {
+    "@discordjs/rest": "^1.1.0",
+    "@discordjs/voice": "^0.17.0",
+    "@distube/ytdl-core": "^4.15.1",
+    "@napi-rs/canvas": "^0.1.70",
+    "axios": "^1.7.2",
+    "canvas": "^2.11.2",
+    "croxydb": "^0.0.7",
+    "date-fns": "^4.1.0",
+    "discord-api-types": "^0.37.5",
+    "discord-banners": "^1.0.1",
+    "discord.js": "14.x",
+    "figlet": "^1.8.1",
+    "google-tts-api": "^2.0.2",
+    "install": "^0.13.0",
+    "lowdb": "^7.0.1",
+    "minecraft-server-util": "^5.4.4",
+    "moment": "^2.29.4",
+    "moment-duration-format": "^2.3.2",
+    "ms": "^2.1.3",
+    "node-cron": "^3.0.3",
+    "node-fetch": "^3.3.0",
+    "npm": "^10.9.1",
+    "os": "^0.1.2",
+    "quickdb": "^1.0.5",
+    "random-anime": "^1.0.6",
+    "request": "^2.88.2",
+    "rhino-ms": "^0.4.0",
+    "sharp": "^0.33.4"
+  }
+}
