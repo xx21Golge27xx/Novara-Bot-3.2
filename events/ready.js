@@ -59,7 +59,9 @@ module.exports = {
       }, config.presence.interval);
 
       /* BAŞLANGIÇ MESAJ KANALI (CONFIG) */
-      const channel = await client.channels.fetch(config.kanallar.baslangicMesaj).catch(() => null);
+      const channel = await client.channels
+        .fetch(config.kanallar.baslangicMesaj)
+        .catch(() => null);
 
       if (channel) {
         let minutes = (db.get('botStartTime') || 10) + 2;
@@ -69,10 +71,14 @@ module.exports = {
         const seconds = Math.floor(Math.random() * 60);
 
         setTimeout(() => {
-          channel.send(
-             `<a:online:1347309854590763058> Bıktım elinizden ama gıyamadım, geldim! Başlama sürem: ${minutes} dakika ${seconds} saniye`
-             `<a:online:1347309854590763058> Kendimi Atayığımda kurtulayım, bırakın peşimi! Başlama sürem: ${minutes} dakika ${seconds} saniye`
-          );
+          const mesajlar = [
+            `<a:online:1347309854590763058> Bıktım elinizden ama gıyamadım, geldim! Başlama sürem: ${minutes} dakika ${seconds} saniye`,
+            `<a:online:1347309854590763058> Kendimi attığımda kurtulayım, bırakın peşimi! Başlama sürem: ${minutes} dakika ${seconds} saniye`
+          ];
+
+          const randomMesaj = mesajlar[Math.floor(Math.random() * mesajlar.length)];
+          channel.send(randomMesaj);
+
         }, 10000);
       }
 
@@ -81,7 +87,10 @@ module.exports = {
     } catch (error) {
       console.error("Ready hatası:", error);
 
-      const errorChannel = await client.channels.fetch(config.kanallar.hataLog).catch(() => null);
+      const errorChannel = await client.channels
+        .fetch(config.kanallar.hataLog)
+        .catch(() => null);
+
       if (errorChannel) {
         errorChannel.send(`❌ Ready hatası: ${error.message}`);
       }
