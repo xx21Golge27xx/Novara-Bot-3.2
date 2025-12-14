@@ -1,6 +1,5 @@
 const { ActivityType } = require('discord.js');
 const db = require('croxydb');
-const config = require('../config.json');
 
 module.exports = {
   name: 'ready',
@@ -8,92 +7,121 @@ module.exports = {
 
   run: async (client) => {
 
-    /* Varsayılan durum */
     client.user.setPresence({
-      activities: [{
-        name: config.presence.default.name,
-        type: ActivityType[config.presence.default.type]
-      }],
-      status: config.presence.default.status
+      activities: [{ name: "/Yardım", type: ActivityType.Custom }],
+      status: 'online',
     });
 
     try {
-      db.set('botAcilis_', Date.now());
+      const botStartTime = Date.now();
+      db.set('botAcilis_', botStartTime);
 
-      /* AKTİVİTELER CONFIG’TEN */
-      const activities = config.presence.activities.map(act => ({
-        name: act.name,
-        type: ActivityType[act.type],
-        url: act.url
-      }));
+      const activities = [
+        { name: "Destek sistemi ile sunucuna destek sistemi kur!", type: ActivityType.Playing },
+        { name: "Captcha sistemi ile sunucunu güvene al!", type: ActivityType.Playing },
+        { name: "Botlist sistemi ile sunucunu kolaylaştır!", type: ActivityType.Playing },
+        { name: "Moderasyon komutları ile sunucunu çok daha pratik yap!", type: ActivityType.Playing },
+        { name: "SPONSOR hostingverim.com", type: ActivityType.Playing },
+        { name: "Sorun varsa geri bildir yap", type: ActivityType.Playing },
+        { name: "Twitch", type: ActivityType.Streaming, url: "https://www.twitch.tv/blewys_" },
+        { name: "/Yardım", type: ActivityType.Custom }
+      ];
 
       const setRandomActivity = () => {
         const activity = activities[Math.floor(Math.random() * activities.length)];
-        client.user.setPresence({
-          activities: [activity],
-          status: 'online'
-        });
+        client.user.setPresence({ activities: [activity], status: 'online' });
       };
 
       const updateActivityWithCounts = () => {
         const guildCount = client.guilds.cache.size;
-        const memberCount = client.guilds.cache.reduce(
-          (acc, guild) => acc + guild.memberCount, 0
-        );
-
-        client.user.setPresence({
-          activities: [{
-            name: `Sunucu: ${guildCount} | Üye: ${memberCount}`,
-            type: ActivityType.Watching
-          }],
-          status: 'online'
-        });
+        const memberCount = client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0);
+        const currentActivity = { name: `Sunucu: ${guildCount} | Üye: ${memberCount}`, type: ActivityType.Watching };
+        client.user.setPresence({ activities: [currentActivity], status: 'online' });
       };
 
       setRandomActivity();
-
       setInterval(() => {
-        Math.random() < 0.5
-          ? setRandomActivity()
-          : updateActivityWithCounts();
-      }, config.presence.interval);
+        Math.random() < 0.5 ? setRandomActivity() : updateActivityWithCounts();
+      }, 15000);
 
-      /* BAŞLANGIÇ MESAJ KANALI (CONFIG) */
-      const channel = await client.channels
-        .fetch(config.kanallar.baslangicMesaj)
-        .catch(() => null);
+      const channelId = '1360654958319636580'; // Kanal ID'sini buraya yazın
+      const channel = await client.channels.fetch(channelId);
 
-      if (channel) {
-        let minutes = (db.get('botStartTime') || 10) + 2;
-        if (minutes > 50) minutes = 10;
-        db.set('botStartTime', minutes);
-
-        const seconds = Math.floor(Math.random() * 60);
-
-        setTimeout(() => {
-          const mesajlar = [
-            `<a:online:1347309854590763058> Bıktım elinizden ama gıyamadım, geldim! Başlama sürem: ${minutes} dakika ${seconds} saniye`,
-            `<a:online:1347309854590763058> Kendimi attığımda kurtulayım, bırakın peşimi! Başlama sürem: ${minutes} dakika ${seconds} saniye`
-          ];
-
-          const randomMesaj = mesajlar[Math.floor(Math.random() * mesajlar.length)];
-          channel.send(randomMesaj);
-
-        }, 10000);
+      if (!channel) {
+        console.error("Kanal bulunamadı.");
+        return;
       }
 
+      // Kanalın izinlerini kontrol et
+      const permissions = channel.permissionsFor(client.user);
+      if (!permissions.has('SendMessages') || !permissions.has('ViewChannel')) {
+        console.error("Botun kanalında mesaj gönderme yetkisi yok.");
+        return;
+      }
+
+      let currentStartTime = db.get('botStartTime') || 10;
+      currentStartTime += 2;
+
+      if (currentStartTime > 50) currentStartTime = 10; // 50'ye ulaştığında başa al
+
+      db.set('botStartTime', currentStartTime);
+
+      const minutes = currentStartTime;
+      const seconds = Math.floor(Math.random() * 60);
+
+      setTimeout(async () => {
+        // Rastgele bir mesaj seçme ve sadece birini gönderme
+        const randomMessage = Math.random() < 0.5 
+          ? `<a:online:1347309854590763058> Bıktım elinizden ama gıyamadım, geldim! Başlama sürem: ${minutes} dakika ${seconds} saniye`
+          : `<a:online:1347309854590763058> Kendimi Atayığımda kurtulayım, bırakın peşimi! Başlama sürem: ${minutes} dakika ${seconds} saniye`;
+
+        await channel.send(randomMessage);
+        console.log("Başlama süresi mesajı gönderildi.");
+      }, 10000);
+
+      // Sunucular hakkında bilgi alma ve yazdırma
+      console.log("\nSunucularım:");
+      client.guilds.cache.forEach((guild) => {
+        const owner = guild.owner ? guild.owner.user.tag : 'Sahip Bilgisi Yok'; // Sahip kontrolü
+        const memberCount = guild.memberCount;
+        console.log(`
+        -------------------------------
+        Sunucu İsmi: ${guild.name}
+        Sunucu ID: ${guild.id}
+        Sunucu Sahibi: ${owner}
+        Üye Sayısı: ${memberCount}
+        -------------------------------
+        `);
+      });
+
+      // Konsolda sunucular bilgisi yazdırıldıktan sonra burayı yazdırıyoruz
+      console.log(`
+_   _                           
+| \\ | | _____   ____ _ _ __ __ _ 
+|  \\| |/ _ \\ \\ / / _\\ | '__/ _\\ | 
+| |\\  | (_) \\ V / (_| | | | (_| | 
+| |_\\_\\___/ \\_/ \\__,_|_|  \\__,_|
+      `);
+
+      // Bot açılış süresi bilgisini buraya ekledim
+      console.log(`Bot açılış süresi: ${minutes} dakika ${seconds} saniye`);
+
+      // Konsola atılacak mesaj
       console.log("Bot hazır ve aktif!");
 
     } catch (error) {
-      console.error("Ready hatası:", error);
+      console.error("Bot hazır olurken bir hata oluştu:", error);
 
-      const errorChannel = await client.channels
-        .fetch(config.kanallar.hataLog)
-        .catch(() => null);
+      const errorChannelId = '1276899166701752320';
+      const errorChannel = await client.channels.fetch(errorChannelId);
 
       if (errorChannel) {
-        errorChannel.send(`❌ Ready hatası: ${error.message}`);
+        await errorChannel.send(`❌ Hata: Bot başlama mesajı gönderilirken bir hata oluştu: ${error.message}`);
       }
     }
+  },
+
+  guildCreate: async (guild) => {
+    console.log(`Yeni sunucuya katıldım: ${guild.name}`);
   }
 };
